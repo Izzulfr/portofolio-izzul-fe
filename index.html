@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      // A theme the visitor pinned is applied before first paint, so it never
+      // flashes. Without a pin, the CSS simply follows the system setting.
+      ;(function () {
+        try {
+          var theme = localStorage.getItem('theme')
+          if (theme === 'light' || theme === 'dark') {
+            document.documentElement.dataset.theme = theme
+            document.querySelector('meta[name="color-scheme"]').content = theme
+          }
+        } catch (error) {
+          /* storage blocked: follow the system */
+        }
+      })()
+    </script>
+
+    <title>Izzul Faturrizky — Software Builder</title>
+    <meta
+      name="description"
+      content="Portfolio of Izzul Faturrizky, an IT Business Analyst and Project Coordinator in Tangerang, Indonesia — requirements, process design and delivery for software that works."
+    />
+    <meta name="author" content="Izzul Faturrizky" />
+    <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Izzul Faturrizky" />
+    <meta property="og:title" content="Izzul Faturrizky — Software Builder" />
+    <meta
+      property="og:description"
+      content="IT Business Analyst & Project Coordinator turning business needs into software that ships."
+    />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>This portfolio needs JavaScript to load its content.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
