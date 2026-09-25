@@ -121,24 +121,27 @@ Keep GIFs short and under a few megabytes; every visitor downloads them.
 
 ## Deployment (Vercel)
 
-Recommended: let the site proxy the API, so the admin's refresh cookie is first-party in
-every browser (Safari blocks third-party cookies). Replace `vercel.json` with:
+Step-by-step for Vercel + Render + Neon, including the API and the database:
+**[DEPLOYMENT.md in portfolio-backend](../portfolio-backend/DEPLOYMENT.md)**.
 
-```json
-{
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "https://YOUR-API-HOST/api/:path*" },
-    { "source": "/((?!api/|media/).*)", "destination": "/index.html" }
-  ]
-}
-```
+What this repository already ships:
 
-Keep `VITE_API_URL=/api/v1`, and on the backend set `CORS_ORIGINS` to the site's URL and
-`COOKIE_SAMESITE=lax`.
+- `vercel.json` rewrites `/api/*` to the API host, so the CMS session cookie stays first-party —
+  the only arrangement that works in Safari, which blocks third-party cookies. **Change that host**
+  if your API is not at `https://portofolio-izzul-be.onrender.com`.
+- The same file keeps `/api/` and `/media/` out of the single-page-app fallback, so a missing image
+  answers 404 instead of HTML, and sets cache headers: a year for hashed `/assets`, an hour with
+  background revalidation for `/media`.
+- Vercel detects the rest (framework Vite, `npm run build`, output `dist`). Use Node 22.x.
+- No environment variables are needed: `VITE_API_URL` defaults to `/api/v1`, which the rewrite
+  forwards. On the API host set `CORS_ORIGINS` to this site's URL.
 
-Alternative: point `VITE_API_URL` at the API directly (`https://api.example.com/api/v1`)
-and use `COOKIE_SAMESITE=none` with `COOKIE_SECURE=true` on the backend. Sessions then
-depend on the browser allowing third-party cookies.
+`vercel.json` is validated against Vercel's schema, which rejects unknown keys — do not add
+comments to it.
+
+Without the proxy you would point `VITE_API_URL` at the API directly and set
+`COOKIE_SAMESITE=none` with `COOKIE_SECURE=true` on the backend; sessions then depend on the
+browser allowing third-party cookies.
 
 ## Content to review before launch
 
